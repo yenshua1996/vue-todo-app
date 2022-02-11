@@ -2,7 +2,7 @@
   <div class="container">
     <div class="app-container">
       <Header @btn-click="toggleForm" :showForm="showForm" />
-      <Form :showForm="showForm" />
+      <Form :showForm="showForm" @add-todo="addTodoItem" />
       <TodoList
         :todos="todos"
         @toggle-reminder="toggleReminder"
@@ -36,30 +36,41 @@ export default {
   },
 
   //register custom events
-  emits: ["btn-click", "toggle-reminder", "delete-todo", "update-todo"],
+  emits: [
+    "btn-click",
+    "toggle-reminder",
+    "delete-todo",
+    "update-todo",
+    "add-todo",
+  ],
 
   //component methods
   methods: {
-    // toggle form input
+    // Toggle form input
     toggleForm() {
       this.showForm = !this.showForm;
 
       console.log(this.showForm);
     },
 
-    // toggle reminder
+    // Toggle reminder
     toggleReminder(id) {
       this.todos = this.todos.map((todo) =>
         todo.id === id ? { ...todo, reminder: !todo.reminder } : todo
       );
     },
 
-    // delete todo item
+    // Add todo item
+    addTodoItem(item) {
+      this.todos = [...this.todos, item];
+    },
+
+    // Delete todo item
     deleteTodo(id) {
       this.todos = this.todos.filter((todo) => todo.id !== id);
     },
 
-    // update todo item
+    // Update todo item
     updateTodo(input) {
       this.todos = this.todos.map((todo) =>
         todo.id === input.id ? { ...todo, body: input.payload } : todo
